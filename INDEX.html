@@ -1,0 +1,2795 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NASOOH — المستشار الأكاديمي الذكي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B1F3A;
+    --navy-light: #112945;
+    --teal: #0D9488;
+    --teal-light: #14B8A6;
+    --gold: #F59E0B;
+    --gold-light: #FCD34D;
+    --red: #EF4444;
+    --green: #10B981;
+    --blue: #3B82F6;
+    --text: #E2E8F0;
+    --text-dim: #94A3B8;
+    --card: rgba(255,255,255,0.05);
+    --card-border: rgba(255,255,255,0.08);
+    --sidebar-w: 260px;
+  
+    --topbar-bg: rgba(11,31,58,0.9);
+    --login-bg: radial-gradient(ellipse at 30% 50%, #0D3A5C 0%, #0B1F3A 50%, #071220 100%);
+    --glass: rgba(11, 31, 58, 0.85);
+    color-scheme: dark;
+  }
+
+
+  /* ===== THEME (Light Mode) ===== */
+  :root[data-theme="light"] {
+    --navy: #F7FAFF;
+    --navy-light: #FFFFFF;
+    --text: #0F172A;
+    --text-dim: #475569;
+    --card: rgba(15,23,42,0.04);
+    --card-border: rgba(15,23,42,0.10);
+    --topbar-bg: rgba(255,255,255,0.85);
+    --login-bg: radial-gradient(ellipse at 30% 50%, #E6F7F6 0%, #F7FAFF 55%, #FFFFFF 100%);
+    --glass: rgba(255,255,255,0.85);
+    color-scheme: light;
+  }
+
+  /* Theme toggle buttons */
+  .theme-toggle-btn {
+    width: 38px; height: 38px; border-radius: 10px;
+    border: 1px solid var(--card-border);
+    background: var(--card);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s;
+    color: var(--text);
+    font-size: 18px;
+    user-select: none;
+  }
+  .theme-toggle-btn:hover { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13,148,136,0.15); }
+
+  .theme-toggle-login {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    background: var(--card);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--text);
+    transition: all 0.25s;
+  }
+  .theme-toggle-login:hover { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13,148,136,0.15); }
+
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ====== LOGIN PAGE ====== */
+  #login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: var(--login-bg);
+  }
+
+  .login-bg-circles {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  }
+  .login-bg-circles span {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.06;
+    animation: float 8s ease-in-out infinite;
+  }
+  .login-bg-circles span:nth-child(1) {
+    width: 600px; height: 600px; background: var(--teal);
+    top: -200px; right: -100px; animation-delay: 0s;
+  }
+  .login-bg-circles span:nth-child(2) {
+    width: 400px; height: 400px; background: var(--gold);
+    bottom: -100px; left: -50px; animation-delay: -3s;
+  }
+  .login-bg-circles span:nth-child(3) {
+    width: 250px; height: 250px; background: var(--teal-light);
+    top: 40%; left: 20%; animation-delay: -5s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  .login-card {
+    background: var(--glass);
+    border: 1px solid rgba(13, 148, 136, 0.25);
+    border-radius: 24px;
+    padding: 48px 44px;
+    width: 440px;
+    max-width: 95vw;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(13,148,136,0.1);
+    position: relative;
+    z-index: 10;
+    animation: slideUp 0.6s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .login-logo {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .login-logo .logo-icon {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    border-radius: 20px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 32px; margin-bottom: 16px;
+    box-shadow: 0 8px 24px rgba(13,148,136,0.35);
+  }
+
+  .login-logo h1 {
+    font-size: 32px; font-weight: 900; letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--teal-light), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .login-logo p {
+    color: var(--text-dim); font-size: 13px; margin-top: 4px;
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  .role-tabs {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; margin-bottom: 28px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px; padding: 4px;
+    border: 1px solid var(--card-border);
+  }
+
+  .role-tab {
+    padding: 10px; border-radius: 9px; border: none; cursor: pointer;
+    font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 600;
+    transition: all 0.3s ease; color: var(--text-dim);
+    background: transparent;
+  }
+  .role-tab.active {
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(13,148,136,0.3);
+  }
+
+  .form-group { margin-bottom: 18px; }
+  .form-group label {
+    display: block; font-size: 13px; color: var(--text-dim);
+    margin-bottom: 8px; font-weight: 600;
+  }
+  .form-group input {
+    width: 100%; padding: 13px 16px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; color: var(--text);
+    font-family: 'Cairo', sans-serif; font-size: 15px;
+    transition: all 0.3s ease; outline: none;
+  }
+  .form-group input:focus {
+    border-color: var(--teal); background: rgba(13,148,136,0.1);
+    box-shadow: 0 0 0 3px rgba(13,148,136,0.15);
+  }
+  .form-group input::placeholder { color: var(--text-dim); font-size: 14px; }
+
+  .login-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    border: none; border-radius: 12px; color: #fff;
+    font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px;
+    box-shadow: 0 4px 20px rgba(13,148,136,0.35);
+    margin-top: 8px;
+  }
+  .login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(13,148,136,0.45);
+  }
+
+  .login-hint {
+    text-align: center; margin-top: 16px;
+    color: var(--text-dim); font-size: 12px;
+  }
+
+  /* ====== MAIN APP ====== */
+  #app { display: none; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed; top: 0; right: 0;
+    width: var(--sidebar-w); height: 100vh;
+    background: var(--navy-light);
+    border-left: 1px solid var(--card-border);
+    display: flex; flex-direction: column;
+    z-index: 100; transition: transform 0.3s ease;
+  }
+
+  .sidebar-header {
+    padding: 24px 20px; border-bottom: 1px solid var(--card-border);
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .sidebar-logo {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(13,148,136,0.25);
+  }
+
+  .sidebar-brand { flex: 1; }
+  .sidebar-brand .name { font-size: 18px; font-weight: 900; color: var(--text); }
+  .sidebar-brand .sub { font-size: 11px; color: var(--teal-light); font-family: 'Tajawal', sans-serif; }
+
+  .sidebar-user {
+    padding: 16px 20px; border-bottom: 1px solid var(--card-border);
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .user-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), #F97316);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: var(--navy); flex-shrink: 0;
+  }
+
+  .user-info .user-name { font-size: 14px; font-weight: 700; }
+  .user-info .user-role {
+    font-size: 11px; color: var(--teal-light);
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  .sidebar-nav { flex: 1; padding: 12px 12px; overflow-y: auto; }
+
+  .nav-section-title {
+    font-size: 10px; font-weight: 700; color: var(--text-dim);
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 12px 10px 6px; opacity: 0.6;
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    cursor: pointer; transition: all 0.25s ease;
+    color: var(--text-dim); font-size: 14px; font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+  .nav-item.active {
+    background: linear-gradient(135deg, rgba(13,148,136,0.2), rgba(20,184,166,0.1));
+    color: var(--teal-light);
+    border: 1px solid rgba(13,148,136,0.2);
+  }
+  .nav-item .nav-icon { font-size: 17px; width: 22px; text-align: center; flex-shrink: 0; }
+
+  .nav-badge {
+    margin-right: auto;
+    background: var(--red); color: #fff;
+    font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 20px;
+  }
+
+  .sidebar-footer {
+    padding: 16px 12px; border-top: 1px solid var(--card-border);
+  }
+
+  .logout-btn {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px; cursor: pointer;
+    color: #EF4444; font-size: 14px; font-weight: 600;
+    transition: all 0.25s ease; width: 100%;
+    background: transparent; border: none; font-family: 'Cairo', sans-serif;
+  }
+  .logout-btn:hover { background: rgba(239,68,68,0.1); }
+
+  /* MAIN CONTENT */
+  .main-content {
+    margin-right: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--navy);
+  }
+
+  .topbar {
+    height: 64px; padding: 0 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--card-border);
+    background: var(--topbar-bg); backdrop-filter: blur(10px);
+    position: sticky; top: 0; z-index: 50;
+  }
+
+  .topbar-title h2 { font-size: 18px; font-weight: 700; }
+  .topbar-title p { font-size: 12px; color: var(--text-dim); font-family: 'Tajawal', sans-serif; }
+
+  .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+  .topbar-btn {
+    width: 38px; height: 38px; border-radius: 10px;
+    border: 1px solid var(--card-border);
+    background: var(--card); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; color: var(--text-dim); transition: all 0.25s;
+    position: relative;
+  }
+  .topbar-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+  .notif-dot {
+    position: absolute; top: 6px; left: 6px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--red); border: 2px solid var(--navy);
+  }
+
+  .page { display: none; padding: 28px; animation: fadeIn 0.4s ease; }
+  .page.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* CARDS */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px; margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 20px 22px;
+    position: relative; overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+  }
+
+  /* Make stat card clickable */
+  .stat-card.clickable {
+    cursor: pointer;
+  }
+  .stat-card.clickable:active {
+    transform: translateY(-1px);
+  }
+
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 80px; height: 80px; border-radius: 0 16px 0 80px;
+    opacity: 0.12;
+  }
+  .stat-card.teal::before { background: var(--teal); }
+  .stat-card.gold::before { background: var(--gold); }
+  .stat-card.red::before { background: var(--red); }
+  .stat-card.blue::before { background: var(--blue); }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.purple::before { background: #8B5CF6; }
+
+  .stat-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 14px;
+  }
+  .stat-card.teal .stat-icon { background: rgba(13,148,136,0.15); }
+  .stat-card.gold .stat-icon { background: rgba(245,158,11,0.15); }
+  .stat-card.red .stat-icon { background: rgba(239,68,68,0.15); }
+  .stat-card.blue .stat-icon { background: rgba(59,130,246,0.15); }
+  .stat-card.green .stat-icon { background: rgba(16,185,129,0.15); }
+  .stat-card.purple .stat-icon { background: rgba(139,92,246,0.15); }
+
+  .stat-value {
+    font-size: 28px; font-weight: 900;
+    line-height: 1; margin-bottom: 6px;
+  }
+  .stat-card.teal .stat-value { color: var(--teal-light); }
+  .stat-card.gold .stat-value { color: var(--gold); }
+  .stat-card.red .stat-value { color: #F87171; }
+  .stat-card.blue .stat-value { color: #60A5FA; }
+  .stat-card.green .stat-value { color: #34D399; }
+  .stat-card.purple .stat-value { color: #A78BFA; }
+
+  .stat-label { font-size: 13px; color: var(--text-dim); font-family: 'Tajawal', sans-serif; }
+  .stat-change {
+    font-size: 11px; margin-top: 6px;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .stat-change.up { color: var(--green); }
+  .stat-change.down { color: var(--red); }
+
+  /* CONTENT GRID */
+  .content-grid {
+    display: grid; gap: 20px;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 900px) { .content-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 16px; overflow: hidden;
+  }
+
+  .card-header {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--card-border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px;
+  }
+
+  .card-action {
+    font-size: 12px; color: var(--teal-light); cursor: pointer;
+    font-family: 'Tajawal', sans-serif; font-weight: 600;
+  }
+  .card-action:hover { text-decoration: underline; }
+
+  .card-body { padding: 20px 22px; }
+
+  /* GPA METER */
+  .gpa-display {
+    text-align: center; padding: 20px 0;
+  }
+
+  .gpa-circle {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(var(--teal) 0%, var(--teal-light) var(--pct), rgba(255,255,255,0.08) var(--pct));
+    display: inline-flex; align-items: center; justify-content: center;
+    position: relative; margin-bottom: 12px;
+  }
+
+  .gpa-circle::before {
+    content: ''; position: absolute;
+    width: 110px; height: 110px;
+    background: var(--navy-light); border-radius: 50%;
+  }
+
+  .gpa-inner {
+    position: relative; z-index: 2; text-align: center;
+  }
+
+  .gpa-num {
+    font-size: 32px; font-weight: 900; color: var(--teal-light);
+    line-height: 1;
+  }
+
+  .gpa-max { font-size: 12px; color: var(--text-dim); }
+
+  .gpa-label { font-size: 13px; color: var(--text-dim); font-family: 'Tajawal', sans-serif; }
+
+  .gpa-row {
+    display: flex; gap: 16px; margin-top: 16px;
+  }
+
+  .gpa-box {
+    flex: 1; background: rgba(255,255,255,0.04);
+    border-radius: 10px; padding: 12px; text-align: center;
+    border: 1px solid var(--card-border);
+  }
+
+  .gpa-box .v { font-size: 20px; font-weight: 800; }
+  .gpa-box .l { font-size: 11px; color: var(--text-dim); font-family: 'Tajawal', sans-serif; margin-top: 3px; }
+  .current .v { color: var(--teal-light); }
+  .predicted .v { color: var(--gold); }
+
+  /* RISK BADGE */
+  .risk-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 13px; font-weight: 700; margin: 8px 0;
+  }
+  .risk-low { background: rgba(16,185,129,0.15); color: #34D399; border: 1px solid rgba(16,185,129,0.25); }
+  .risk-med { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.25); }
+  .risk-high { background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.25); }
+
+  /* PROGRESS BARS */
+  .course-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .course-row:last-child { border-bottom: none; }
+  .course-name { font-size: 13px; font-weight: 600; width: 130px; flex-shrink: 0; }
+  .course-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; }
+  .course-bar { height: 100%; border-radius: 10px; transition: width 1s ease; }
+  .course-grade { font-size: 13px; font-weight: 700; width: 32px; text-align: center; flex-shrink: 0; }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    padding: 11px 16px; text-align: right;
+    font-size: 11px; color: var(--text-dim); font-weight: 700;
+    border-bottom: 1px solid var(--card-border);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .data-table td {
+    padding: 12px 16px; font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+  /* TAGS */
+  .tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .tag-green { background: rgba(16,185,129,0.15); color: #34D399; }
+  .tag-yellow { background: rgba(245,158,11,0.15); color: var(--gold); }
+  .tag-red { background: rgba(239,68,68,0.15); color: #F87171; }
+  .tag-blue { background: rgba(59,130,246,0.15); color: #60A5FA; }
+
+  /* ALERTS */
+  .alert-item {
+    display: flex; gap: 14px; padding: 14px;
+    border-radius: 12px; margin-bottom: 10px;
+    border: 1px solid transparent; position: relative;
+  }
+  .alert-item.alert-warn { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.2); }
+  .alert-item.alert-danger { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2); }
+  .alert-item.alert-info { background: rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.2); }
+  .alert-item.alert-success { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.2); }
+
+  .alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .alert-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .alert-desc { font-size: 12px; color: var(--text-dim); font-family: 'Tajawal', sans-serif; line-height: 1.5; }
+  .alert-time { position: absolute; top: 14px; left: 14px; font-size: 11px; color: var(--text-dim); font-family: 'Tajawal', sans-serif; }
+
+  /* RECOMMENDATIONS */
+  .rec-item {
+    display: flex; gap: 14px; padding: 14px;
+    border: 1px solid var(--card-border); border-radius: 12px;
+    margin-bottom: 10px; transition: all 0.25s;
+    cursor: pointer;
+  }
+  .rec-item:hover { border-color: var(--teal); background: rgba(13,148,136,0.05); }
+
+  .rec-platform {
+    width: 42px; height: 42px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+    background: rgba(13,148,136,0.15);
+  }
+
+  .rec-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .rec-meta { font-size: 12px; color: var(--text-dim); font-family: 'Tajawal', sans-serif; }
+  .rec-enroll {
+    margin-right: auto; font-size: 12px; color: var(--teal-light);
+    font-weight: 700; cursor: pointer; padding: 6px 14px;
+    border: 1px solid rgba(13,148,136,0.3); border-radius: 8px;
+    align-self: center; background: transparent; font-family: 'Cairo', sans-serif;
+    transition: all 0.25s;
+  }
+  .rec-enroll:hover { background: rgba(13,148,136,0.15); }
+
+  /* CHATBOT */
+  .chatbot-fab {
+    position: fixed; bottom: 28px; left: 28px;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; cursor: pointer; z-index: 200;
+    box-shadow: 0 4px 20px rgba(13,148,136,0.45);
+    transition: all 0.3s ease; border: none;
+  }
+  .chatbot-fab:hover { transform: scale(1.1); }
+
+  .chatbot-panel {
+    position: fixed; bottom: 96px; left: 28px;
+    width: 340px; height: 460px;
+    background: var(--navy-light);
+    border: 1px solid var(--card-border);
+    border-radius: 20px; z-index: 200;
+    display: none; flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    overflow: hidden;
+    animation: popUp 0.3s ease;
+  }
+  .chatbot-panel.open { display: flex; }
+
+  @keyframes popUp {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .chat-header {
+    padding: 14px 18px; border-bottom: 1px solid var(--card-border);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .chat-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  }
+
+  .chat-name { font-size: 14px; font-weight: 700; }
+  .chat-status { font-size: 11px; color: var(--green); font-family: 'Tajawal', sans-serif; }
+
+  .chat-close {
+    margin-right: auto; font-size: 20px; cursor: pointer;
+    color: var(--text-dim); background: none; border: none; color: var(--text-dim);
+    line-height: 1;
+  }
+
+  .chat-messages { flex: 1; overflow-y: auto; padding: 16px; }
+
+  .chat-msg {
+    max-width: 75%; padding: 10px 14px; border-radius: 14px;
+    font-size: 13px; line-height: 1.5; margin-bottom: 10px;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .chat-msg.bot {
+    background: rgba(13,148,136,0.15); border: 1px solid rgba(13,148,136,0.2);
+    border-radius: 14px 14px 14px 4px;
+  }
+  .chat-msg.user {
+    background: var(--teal); color: #fff;
+    margin-right: auto; border-radius: 14px 14px 4px 14px;
+  }
+
+  .chat-input-row {
+    padding: 12px; border-top: 1px solid var(--card-border);
+    display: flex; gap: 8px;
+  }
+
+  .chat-input {
+    flex: 1; padding: 10px 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--card-border); border-radius: 10px;
+    color: var(--text); font-family: 'Cairo', sans-serif; font-size: 13px;
+    outline: none;
+  }
+  .chat-input:focus { border-color: var(--teal); }
+
+  .chat-send {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--teal); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    transition: background 0.25s;
+  }
+  .chat-send:hover { background: var(--teal-light); }
+
+  /* ADMIN SPECIFIC */
+  .students-table-wrap { overflow-x: auto; }
+
+  .search-bar {
+    display: flex; gap: 10px; margin-bottom: 18px; align-items: center;
+  }
+
+  .search-input {
+    flex: 1; padding: 10px 16px;
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 10px; color: var(--text);
+    font-family: 'Cairo', sans-serif; font-size: 14px; outline: none;
+  }
+  .search-input:focus { border-color: var(--teal); }
+
+  .filter-btn {
+    padding: 10px 18px; border-radius: 10px;
+    border: 1px solid var(--card-border); background: var(--card);
+    color: var(--text-dim); font-family: 'Cairo', sans-serif; font-size: 13px;
+    cursor: pointer; transition: all 0.25s;
+  }
+  .filter-btn:hover, .filter-btn.active { border-color: var(--teal); color: var(--teal-light); }
+
+  /* PAGE HEADER */
+  .page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .page-title { font-size: 22px; font-weight: 800; }
+  .page-subtitle { font-size: 13px; color: var(--text-dim); font-family: 'Tajawal', sans-serif; margin-top: 2px; }
+
+  .action-btn {
+    padding: 10px 20px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    border: none; color: #fff;
+    font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.25s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(13,148,136,0.35); }
+
+  /* MINI CHART (CSS only) */
+  .mini-chart {
+    display: flex; align-items: flex-end; gap: 4px; height: 60px; padding-top: 8px;
+  }
+
+  .bar {
+    flex: 1; border-radius: 4px 4px 0 0;
+    background: rgba(13,148,136,0.3); transition: height 0.8s ease;
+    position: relative;
+  }
+  .bar:hover { background: rgba(13,148,136,0.6); }
+  .bar.active { background: var(--teal); }
+
+  /* NOTIF PANEL */
+  .notif-preview {
+    position: absolute; top: calc(100% + 8px); left: 0;
+    width: 300px; background: var(--navy-light);
+    border: 1px solid var(--card-border); border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4); z-index: 999; display: none;
+    overflow: hidden;
+  }
+  .notif-preview.open { display: block; animation: fadeIn 0.25s ease; }
+  .notif-pheader { padding: 12px 16px; border-bottom: 1px solid var(--card-border); font-size: 13px; font-weight: 700; }
+  .notif-pitem {
+    padding: 12px 16px; display: flex; gap: 10px; align-items: flex-start;
+    border-bottom: 1px solid rgba(255,255,255,0.04); cursor: pointer;
+  }
+  .notif-pitem:hover { background: rgba(255,255,255,0.04); }
+  .notif-pitem:last-child { border-bottom: none; }
+  .notif-pdot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); flex-shrink: 0; margin-top: 4px; }
+  .notif-ptext { font-size: 12px; font-family: 'Tajawal', sans-serif; line-height: 1.4; }
+
+  /* FULL CARD */
+  .full-card { grid-column: 1 / -1; }
+
+  /* SECTION DIVIDER */
+  .section-title {
+    font-size: 16px; font-weight: 800; margin-bottom: 16px; margin-top: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--card-border);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(13,148,136,0.4); }
+
+  /* STUDENT PROFILE CARD */
+  .profile-header {
+    display: flex; align-items: center; gap: 18px; margin-bottom: 24px;
+    padding: 22px; background: var(--card); border: 1px solid var(--card-border); border-radius: 16px;
+  }
+  .profile-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), #F97316);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 800; color: var(--navy); flex-shrink: 0;
+  }
+  .profile-name { font-size: 20px; font-weight: 800; }
+  .profile-id { font-size: 13px; color: var(--text-dim); font-family: 'Tajawal', sans-serif; margin-top: 2px; }
+  .profile-tags { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+
+  /* TOOLTIP */
+  [data-tip] { position: relative; cursor: default; }
+  [data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute; bottom: calc(100% + 6px); right: 50%;
+    transform: translateX(50%);
+    background: rgba(0,0,0,0.8); color: #fff; padding: 5px 10px;
+    border-radius: 7px; font-size: 11px; white-space: nowrap;
+    font-family: 'Tajawal', sans-serif; z-index: 999;
+  }
+
+  /* Percentile comparison styling */
+  .percentile-comparison {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(139,92,246,0.1);
+    border: 1px solid rgba(139,92,246,0.2);
+    border-radius: 10px;
+  }
+
+  .percentile-icon {
+    font-size: 24px;
+  }
+
+  .percentile-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: #A78BFA;
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  /* ====== STUDENT NOTES (ADMIN) ====== */
+  .note-cell{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    max-width: 420px;
+  }
+  .note-snippet{
+    flex:1;
+    font-size:12px;
+    color: var(--text-dim);
+    font-family: 'Tajawal', sans-serif;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+  }
+  .note-empty{ color: rgba(148,163,184,0.8); }
+  .note-btn{
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid var(--card-border);
+    background: var(--card);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .note-btn:hover{
+    border-color: var(--teal);
+    transform: translateY(-1px);
+  }
+
+  /* Note modal */
+  .modal-backdrop{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+    padding: 18px;
+  }
+  .modal-card{
+    width: 520px;
+    max-width: 95vw;
+    background: var(--navy-light);
+    border: 1px solid rgba(13,148,136,0.25);
+    border-radius: 18px;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.55);
+    overflow: hidden;
+  }
+  .modal-header{
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--card-border);
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .modal-title{
+    font-size: 14px;
+    font-weight: 800;
+    display:flex;
+    align-items:center;
+    gap: 8px;
+  }
+  .modal-close{
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid var(--card-border);
+    background: var(--card);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 18px;
+    line-height: 1;
+  }
+  .modal-close:hover{ border-color: var(--red); color: #fff; background: rgba(239,68,68,0.12); }
+  .modal-body{ padding: 16px; }
+  .modal-sub{
+    color: var(--teal-light);
+    font-size: 12px;
+    font-family: 'Tajawal', sans-serif;
+    margin-bottom: 10px;
+  }
+  .note-textarea{
+    width: 100%;
+    min-height: 130px;
+    resize: vertical;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    color: var(--text);
+    outline: none;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .note-textarea:focus{ border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13,148,136,0.15); }
+  .modal-actions{
+    display:flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 12px;
+  }
+  .modal-hint{
+    margin-top: 10px;
+    font-size: 11px;
+    color: rgba(148,163,184,0.85);
+    font-family: 'Tajawal', sans-serif;
+  }
+
+
+  /* ====== STUDENT SURVEY (ONE-TIME) ====== */
+  .modal-card.survey{
+    width: 720px;
+    max-width: 96vw;
+  }
+  .survey-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 14px;
+    margin-top: 10px;
+  }
+  .survey-grid .full{ grid-column: 1 / -1; }
+  .survey-field label{
+    display:block;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .survey-input, .survey-select, .survey-textarea{
+    width: 100%;
+    padding: 11px 12px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    color: var(--text);
+    outline: none;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    transition: all 0.25s ease;
+  }
+  .survey-textarea{ min-height: 110px; resize: vertical; line-height: 1.6; }
+  .survey-input:focus, .survey-select:focus, .survey-textarea:focus{
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(13,148,136,0.15);
+  }
+  .radio-row{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    font-family: 'Tajawal', sans-serif;
+  }
+  .radio-row label{
+    display:flex;
+    align-items:center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text);
+    margin: 0;
+    font-weight: 600;
+  }
+  .check-row{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    font-family: 'Tajawal', sans-serif;
+  }
+  .check-row label{
+    display:flex;
+    align-items:center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text);
+    margin: 0;
+    font-weight: 600;
+  }
+  .btn-disabled{
+    opacity: 0.45;
+    cursor: not-allowed !important;
+    pointer-events: none;
+  }
+
+
+  /* ====== SURVEY MODAL — DARK MODE TUNING ====== */
+  .modal-backdrop{
+    background: rgba(0,0,0,0.72);
+    backdrop-filter: blur(6px);
+  }
+  .modal-card{
+    background: linear-gradient(180deg, rgba(9,25,44,0.98), rgba(6,14,26,0.98));
+    border: 1px solid rgba(20,184,166,0.22);
+    box-shadow: 0 40px 90px rgba(0,0,0,0.65), 0 0 0 1px rgba(20,184,166,0.08);
+  }
+  .modal-header{ background: rgba(255,255,255,0.02); }
+  .modal-title{ color: var(--text); text-shadow: 0 1px 0 rgba(0,0,0,0.35); }
+  .modal-sub{ color: rgba(20,184,166,0.95); }
+
+  .survey-input, .survey-select, .survey-textarea, .note-textarea{
+    background: rgba(7,18,32,0.55);
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+  .survey-input::placeholder, .survey-textarea::placeholder, .note-textarea::placeholder{
+    color: rgba(148,163,184,0.85);
+  }
+
+  /* Make native dropdown menus dark (where supported) */
+  .survey-select{ color-scheme: dark; }
+  .survey-select option{
+    background: #071220;
+    color: var(--text);
+  }
+
+  .radio-row, .check-row{
+    background: rgba(7,18,32,0.40);
+    border-color: rgba(255,255,255,0.10);
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ========== LOGIN PAGE ========== -->
+<div id="login-page">
+  <div class="login-bg-circles">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="login-card">
+    <button class="theme-toggle-login" id="theme-toggle-login" onclick="toggleTheme()" title="تفعيل الوضع النهاري" aria-label="تفعيل الوضع النهاري"><span class="theme-icon">☀️</span></button>
+    <div class="login-logo">
+      <div class="logo-icon">🎓</div>
+      <h1>NASOOH</h1>
+      <p>المستشار الأكاديمي الذكي — جامعة شقراء</p>
+    </div>
+
+    <div class="role-tabs">
+      <button class="role-tab active" onclick="selectRole('student', this)">👨‍🎓 طالب</button>
+      <button class="role-tab" onclick="selectRole('admin', this)">🛡️ مشرف</button>
+    </div>
+
+    <div class="form-group">
+      <label>اسم المستخدم / البريد الجامعي</label>
+      <input type="text" id="login-user" placeholder="s443460269@std.su.edu.sa">
+    </div>
+    <div class="form-group">
+      <label>كلمة المرور</label>
+      <input type="password" id="login-pass" placeholder="••••••••">
+    </div>
+
+    <button class="login-btn" onclick="doLogin()">دخول إلى النظام ←</button>
+
+    <p class="login-hint">
+      🔒 جميع البيانات مشفرة ومحمية وفق معايير الأمن الأكاديمي
+    </p>
+  </div>
+</div>
+
+<!-- ========== MAIN APP ========== -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">🎓</div>
+      <div class="sidebar-brand">
+        <div class="name">NASOOH</div>
+        <div class="sub" id="user-role-label">طالب</div>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="user-initials">هـ</div>
+      <div class="user-info">
+        <div class="user-name" id="user-display-name">هشام الساعد</div>
+        <div class="user-role" id="user-id-display">s443460269</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebar-nav"></nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="doLogout()">
+        <span>🚪</span> تسجيل الخروج
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h2 id="topbar-title">لوحة التحكم</h2>
+        <p id="topbar-sub">مرحباً بك في نظام NASOOH</p>
+      </div>
+      <div class="topbar-actions">
+        <div style="position:relative;">
+          <button class="topbar-btn" onclick="toggleNotif(this)" title="الإشعارات">
+            🔔
+            <span class="notif-dot"></span>
+          </button>
+          <div class="notif-preview" id="notif-panel">
+            <div class="notif-pheader">🔔 الإشعارات (3)</div>
+            <div class="notif-pitem">
+              <div class="notif-pdot"></div>
+              <div class="notif-ptext">انخفاض ملحوظ في درجة مادة قواعد البيانات</div>
+            </div>
+            <div class="notif-pitem">
+              <div class="notif-pdot"></div>
+              <div class="notif-ptext">تتوفر دورة موصى بها جديدة في Doroob</div>
+            </div>
+            <div class="notif-pitem">
+              <div class="notif-pdot" style="background:var(--gold)"></div>
+              <div class="notif-ptext">تذكير: اجتماع إرشاد أكاديمي الأسبوع القادم</div>
+            </div>
+          </div>
+        </div>
+        <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="تفعيل الوضع النهاري" aria-label="تفعيل الوضع النهاري"><span class="theme-icon">☀️</span></button>
+        <button class="topbar-btn" title="الإعدادات">⚙️</button>
+      </div>
+    </header>
+
+    <!-- ===== STUDENT PAGES ===== -->
+
+    <!-- STUDENT DASHBOARD -->
+    <div class="page" id="page-student-dashboard">
+      <div class="profile-header">
+        <div class="profile-avatar" id="profile-avatar">هـ</div>
+        <div>
+          <div class="profile-name" id="profile-name">هشام عبدالعزيز الساعد</div>
+          <div class="profile-id" id="profile-meta">s443460269@std.su.edu.sa &nbsp;|&nbsp; كلية الحوسبة وتقنية المعلومات &nbsp;|&nbsp; الفصل الدراسي: الثالث</div>
+          <div class="profile-tags">
+            <span class="tag tag-blue">علوم الحاسب</span>
+            <span class="tag tag-green">الفصل السادس</span>
+            <span class="tag tag-yellow">ساعات: 98 من 120</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card teal">
+          <div class="stat-icon">📊</div>
+          <div class="stat-value">3.72</div>
+          <div class="stat-label">المعدل التراكمي الحالي</div>
+          <div class="stat-change up">↑ +0.08 عن الفصل الماضي</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-icon">🔮</div>
+          <div class="stat-value">3.65</div>
+          <div class="stat-label">المعدل المتوقع - الفصل القادم</div>
+          <div class="stat-change down">↓ توقع بانخفاض طفيف</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">📚</div>
+          <div class="stat-value">6</div>
+          <div class="stat-label">مواد مسجلة حالياً</div>
+          <div class="stat-change up">↑ 18 ساعة</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value">4</div>
+          <div class="stat-label">توصيات دورات نشطة</div>
+          <div class="stat-change">دورات خارجية موصى بها</div>
+        </div>
+        <!-- NEW: Student Comparison KPI -->
+        <div class="stat-card purple">
+          <div class="stat-icon">🏆</div>
+          <div class="stat-value">73%</div>
+          <div class="stat-label">ترتيبك بين الزملاء</div>
+          <div class="stat-change up">أفضل من 73% من الطلاب</div>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📈 ملخص الأداء الأكاديمي</div>
+          </div>
+          <div class="card-body">
+            <div class="gpa-display">
+              <div class="gpa-circle" style="--pct: 93%">
+                <div class="gpa-inner">
+                  <div class="gpa-num">3.72</div>
+                  <div class="gpa-max">من 5.0</div>
+                </div>
+              </div>
+              <div class="gpa-label">المعدل التراكمي الكلي</div>
+              <div style="text-align:center; margin-top:8px;">
+                <span class="risk-badge risk-low">🟢 مستوى المخاطرة: منخفض</span>
+              </div>
+              <!-- NEW: Percentile Comparison -->
+              <div class="percentile-comparison">
+                <span class="percentile-icon">🏆</span>
+                <span class="percentile-text">أنت أفضل من 73% من طلاب الكلية</span>
+              </div>
+            </div>
+            <div class="gpa-row">
+              <div class="gpa-box current">
+                <div class="v">3.72</div>
+                <div class="l">الحالي</div>
+              </div>
+              <div class="gpa-box predicted">
+                <div class="v">3.65</div>
+                <div class="l">المتوقع</div>
+              </div>
+              <div class="gpa-box" style="border-color: rgba(59,130,246,0.2);">
+                <div class="v" style="color:#60A5FA">3.50</div>
+                <div class="l">الهدف</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📋 أداء المواد الحالية</div>
+          </div>
+          <div class="card-body">
+            <div id="courses-bars"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🔔 التنبيهات الأكاديمية</div>
+            <span class="card-action">عرض الكل</span>
+          </div>
+          <div class="card-body">
+            <div class="alert-item alert-warn">
+              <div class="alert-icon">⚠️</div>
+              <div>
+                <div class="alert-title">انخفاض محتمل في قواعد البيانات</div>
+                <div class="alert-desc">أداؤك في هذه المادة انخفض بمقدار 12% عن المتوسط المتوقع. يُنصح بمراجعة إضافية.</div>
+              </div>
+              <div class="alert-time">اليوم</div>
+            </div>
+            <div class="alert-item alert-info">
+              <div class="alert-icon">💡</div>
+              <div>
+                <div class="alert-title">دورة موصى بها متاحة</div>
+                <div class="alert-desc">دورة جديدة في Python لتعلم الآلة متاحة على منصة Doroob مجاناً.</div>
+              </div>
+              <div class="alert-time">أمس</div>
+            </div>
+            <div class="alert-item alert-success">
+              <div class="alert-icon">✅</div>
+              <div>
+                <div class="alert-title">تحسن ملحوظ في الشبكات</div>
+                <div class="alert-desc">أداؤك في مادة شبكات الحاسوب تحسّن +15% منذ الأسبوع الماضي. استمر!</div>
+              </div>
+              <div class="alert-time">3 أيام</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🎯 المسار الوظيفي المقترح</div>
+          </div>
+          <div class="card-body">
+            <div style="padding: 10px 0;">
+              <div style="font-size:15px; font-weight:700; margin-bottom:8px; color: var(--gold);">🏆 مهندس بيانات (Data Engineer)</div>
+              <div style="font-size:13px; color: var(--text-dim); font-family:'Tajawal',sans-serif; line-height:1.6; margin-bottom:14px;">
+                بناءً على درجاتك المتميزة في الخوارزميات وقواعد البيانات، ومع تحسين أداءك في Python، يُرشح لك هذا المسار الوظيفي المطلوب بقوة في سوق العمل السعودي.
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <span class="tag tag-blue">SQL ✓</span>
+                <span class="tag tag-green">Python (تطوير)</span>
+                <span class="tag tag-yellow">Big Data (مقترح)</span>
+                <span class="tag tag-blue">Cloud (مقترح)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENT RECOMMENDATIONS -->
+    <div class="page" id="page-student-courses">
+      <div class="page-header">
+        <div>
+          <div class="page-title">🎯 توصيات الدورات</div>
+          <div class="page-subtitle">دورات مقترحة بناءً على مواطن الضعف والمسار الوظيفي</div>
+        </div>
+      </div>
+
+      <div class="section-title">📌 دورات موصى بها بشدة</div>
+      <div id="recs-list"></div>
+
+      <div class="section-title" style="margin-top:28px;">🌐 منصات التعلم المعتمدة</div>
+      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap:14px;">
+        <div class="card" style="text-align:center; padding:20px; cursor:pointer;">
+          <div style="font-size:28px; margin-bottom:8px;">🇸🇦</div>
+          <div style="font-weight:700;">Doroob</div>
+          <div style="font-size:11px; color:var(--text-dim); font-family:'Tajawal',sans-serif;">منصة وطنية</div>
+        </div>
+        <div class="card" style="text-align:center; padding:20px; cursor:pointer;">
+          <div style="font-size:28px; margin-bottom:8px;">🎓</div>
+          <div style="font-weight:700;">Coursera</div>
+          <div style="font-size:11px; color:var(--text-dim); font-family:'Tajawal',sans-serif;">دولية</div>
+        </div>
+        <div class="card" style="text-align:center; padding:20px; cursor:pointer;">
+          <div style="font-size:28px; margin-bottom:8px;">🚀</div>
+          <div style="font-weight:700;">FutureX</div>
+          <div style="font-size:11px; color:var(--text-dim); font-family:'Tajawal',sans-serif;">منصة وطنية</div>
+        </div>
+        <div class="card" style="text-align:center; padding:20px; cursor:pointer;">
+          <div style="font-size:28px; margin-bottom:8px;">💻</div>
+          <div style="font-weight:700;">Satr</div>
+          <div style="font-size:11px; color:var(--text-dim); font-family:'Tajawal',sans-serif;">برمجة</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDENT ALERTS -->
+    <div class="page" id="page-student-alerts">
+      <div class="page-header">
+        <div>
+          <div class="page-title">🔔 التنبيهات والإشعارات</div>
+          <div class="page-subtitle">جميع التنبيهات الأكاديمية المتعلقة بأدائك</div>
+        </div>
+        <button class="action-btn">✅ تعليم الكل مقروء</button>
+      </div>
+
+      <div class="alert-item alert-danger">
+        <div class="alert-icon">🚨</div>
+        <div>
+          <div class="alert-title">تحذير: انخفاض حاد في معدل الحضور</div>
+          <div class="alert-desc">نسبة حضورك في مادة "قواعد البيانات المتقدمة" وصلت إلى 68% وهي أقل من الحد الأدنى المطلوب (75%). يُرجى المراجعة الفورية مع المرشد الأكاديمي.</div>
+        </div>
+        <div class="alert-time">اليوم</div>
+      </div>
+
+      <div class="alert-item alert-warn">
+        <div class="alert-icon">⚠️</div>
+        <div>
+          <div class="alert-title">توقع بانخفاض المعدل الفصلي</div>
+          <div class="alert-desc">بناءً على أدائك الحالي، يتوقع النظام انخفاض معدلك الفصلي من 3.8 إلى 3.5. يُوصى بالمراجعة المكثفة في المواد الضعيفة.</div>
+        </div>
+        <div class="alert-time">أمس</div>
+      </div>
+
+      <div class="alert-item alert-info">
+        <div class="alert-icon">💡</div>
+        <div>
+          <div class="alert-title">خطة دراسية مخصصة متاحة</div>
+          <div class="alert-desc">قام النظام بإنشاء خطة دراسية أسبوعية مخصصة لك تركز على تقوية أدائك في قواعد البيانات والخوارزميات.</div>
+        </div>
+        <div class="alert-time">3 أيام</div>
+      </div>
+
+      <div class="alert-item alert-success">
+        <div class="alert-icon">🎉</div>
+        <div>
+          <div class="alert-title">أداء ممتاز في مادة الشبكات!</div>
+          <div class="alert-desc">حصلت على أعلى درجة في الاختبار الأول لمادة شبكات الحاسوب (92/100). استمر في هذا المستوى الرائع.</div>
+        </div>
+        <div class="alert-time">أسبوع</div>
+      </div>
+    </div>
+
+    <!-- STUDENT GPA PREDICTION -->
+    <div class="page" id="page-student-prediction">
+      <div class="page-header">
+        <div>
+          <div class="page-title">🔮 توقع الأداء الأكاديمي</div>
+          <div class="page-subtitle">تحليل ذكي لأدائك وتنبؤ بمعدلك المستقبلي</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card teal">
+          <div class="stat-icon">📊</div>
+          <div class="stat-value">3.72</div>
+          <div class="stat-label">المعدل الحالي</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-icon">🔮</div>
+          <div class="stat-value">3.65</div>
+          <div class="stat-label">المعدل المتوقع</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon">📈</div>
+          <div class="stat-value">88%</div>
+          <div class="stat-label">دقة التوقع</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value">منخفض</div>
+          <div class="stat-label">مستوى المخاطرة</div>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="card full-card">
+          <div class="card-header">
+            <div class="card-title">📉 تطور المعدل التراكمي عبر الفصول</div>
+          </div>
+          <div class="card-body">
+            <div style="display:flex; gap:6px; align-items:flex-end; height:120px; padding-bottom:8px;">
+              <div style="display:flex; flex-direction:column; align-items:center; flex:1; gap:6px;">
+                <div style="font-size:11px; color:var(--text-dim)">3.40</div>
+                <div style="flex:1; width:100%; background:linear-gradient(to top, var(--teal), var(--teal-light)); border-radius:6px 6px 0 0; height:68%;"></div>
+                <div style="font-size:10px; color:var(--text-dim)">F1</div>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; flex:1; gap:6px;">
+                <div style="font-size:11px; color:var(--text-dim)">3.55</div>
+                <div style="flex:1; width:100%; background:linear-gradient(to top, var(--teal), var(--teal-light)); border-radius:6px 6px 0 0; height:71%;"></div>
+                <div style="font-size:10px; color:var(--text-dim)">F2</div>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; flex:1; gap:6px;">
+                <div style="font-size:11px; color:var(--text-dim)">3.60</div>
+                <div style="flex:1; width:100%; background:linear-gradient(to top, var(--teal), var(--teal-light)); border-radius:6px 6px 0 0; height:72%;"></div>
+                <div style="font-size:10px; color:var(--text-dim)">F3</div>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; flex:1; gap:6px;">
+                <div style="font-size:11px; color:var(--text-dim)">3.50</div>
+                <div style="flex:1; width:100%; background:linear-gradient(to top, var(--teal), var(--teal-light)); border-radius:6px 6px 0 0; height:70%;"></div>
+                <div style="font-size:10px; color:var(--text-dim)">F4</div>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; flex:1; gap:6px;">
+                <div style="font-size:11px; color:var(--text-dim)">3.72</div>
+                <div style="flex:1; width:100%; background:linear-gradient(to top, var(--teal), var(--teal-light)); border-radius:6px 6px 0 0; height:74.4%;"></div>
+                <div style="font-size:10px; color:var(--text-dim)">F5</div>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; flex:1; gap:6px;">
+                <div style="font-size:11px; color:var(--gold)">3.65★</div>
+                <div style="flex:1; width:100%; background:linear-gradient(to top, var(--gold), #FCD34D); border-radius:6px 6px 0 0; height:73%; opacity:0.6;"></div>
+                <div style="font-size:10px; color:var(--gold)">F6(توقع)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">⚠️ عوامل المخاطرة</div>
+          </div>
+          <div class="card-body">
+            <div class="course-row">
+              <div class="course-name">الحضور</div>
+              <div class="course-bar-wrap"><div class="course-bar" style="width:68%; background:var(--red)"></div></div>
+              <div class="course-grade" style="color:var(--red)">68%</div>
+            </div>
+            <div class="course-row">
+              <div class="course-name">قواعد البيانات</div>
+              <div class="course-bar-wrap"><div class="course-bar" style="width:72%; background:var(--gold)"></div></div>
+              <div class="course-grade" style="color:var(--gold)">C+</div>
+            </div>
+            <div class="course-row">
+              <div class="course-name">المشاركة</div>
+              <div class="course-bar-wrap"><div class="course-bar" style="width:80%; background:var(--teal)"></div></div>
+              <div class="course-grade" style="color:var(--teal-light)">80%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">💡 توصيات للتحسين</div>
+          </div>
+          <div class="card-body">
+            <div class="alert-item alert-info" style="margin-bottom:8px;">
+              <div class="alert-icon" style="font-size:16px;">1️⃣</div>
+              <div class="alert-desc">ارفع نسبة حضورك في قواعد البيانات فوق 75% لضمان عدم الحرمان</div>
+            </div>
+            <div class="alert-item alert-info" style="margin-bottom:8px;">
+              <div class="alert-icon" style="font-size:16px;">2️⃣</div>
+              <div class="alert-desc">التحق بدورة Python المقترحة لتقوية أدائك في مادة البرمجة</div>
+            </div>
+            <div class="alert-item alert-info">
+              <div class="alert-icon" style="font-size:16px;">3️⃣</div>
+              <div class="alert-desc">راجع ملاحظات المرشد الأكاديمي حول خطة الفصل القادم</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ADMIN PAGES ===== -->
+
+    <!-- ADMIN DASHBOARD -->
+    <div class="page" id="page-admin-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">📊 لوحة تحكم المشرف</div>
+          <div class="page-subtitle">نظرة عامة على أداء جميع الطلاب</div>
+        </div>
+        <button class="action-btn">📥 تصدير التقرير</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card teal">
+          <div class="stat-icon">👨‍🎓</div>
+          <div class="stat-value">248</div>
+          <div class="stat-label">إجمالي الطلاب</div>
+          <div class="stat-change up">↑ +12 عن الفصل الماضي</div>
+        </div>
+        <!-- UPDATED: Clickable Alert Card -->
+        <div class="stat-card red clickable" onclick="showPage('admin-alerts', null)" style="cursor: pointer;" title="انقر للانتقال إلى صفحة التنبيهات">
+          <div class="stat-icon">🚨</div>
+          <div class="stat-value">23</div>
+          <div class="stat-label">طلاب في خطر أكاديمي</div>
+          <div class="stat-change down">↑ +5 هذا الأسبوع</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-icon">📈</div>
+          <div class="stat-value">3.61</div>
+          <div class="stat-label">متوسط المعدل التراكمي</div>
+          <div class="stat-change up">↑ +0.05</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value">87%</div>
+          <div class="stat-label">معدل الحضور الكلي</div>
+          <div class="stat-change up">↑ جيد</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-icon">📧</div>
+          <div class="stat-value">156</div>
+          <div class="stat-label">تنبيهات أُرسلت هذا الفصل</div>
+          <div class="stat-change">تلقائية ويدوية</div>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">⚠️ الطلاب الأكثر عرضة للخطر</div>
+            <span class="card-action" onclick="showAdminPage('admin-students')">عرض الكل</span>
+          </div>
+          <div class="card-body">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>الطالب</th>
+                  <th>المعدل</th>
+                  <th>المخاطرة</th>
+                  <th>الحضور</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>أحمد الزهراني</td>
+                  <td>2.10</td>
+                  <td><span class="tag tag-red">🔴 عالي</span></td>
+                  <td style="color:var(--red)">61%</td>
+                </tr>
+                <tr>
+                  <td>نورة السبيعي</td>
+                  <td>2.45</td>
+                  <td><span class="tag tag-yellow">🟡 متوسط</span></td>
+                  <td style="color:var(--gold)">72%</td>
+                </tr>
+                <tr>
+                  <td>محمد العتيبي</td>
+                  <td>2.30</td>
+                  <td><span class="tag tag-red">🔴 عالي</span></td>
+                  <td style="color:var(--red)">65%</td>
+                </tr>
+                <tr>
+                  <td>ريم الغامدي</td>
+                  <td>2.60</td>
+                  <td><span class="tag tag-yellow">🟡 متوسط</span></td>
+                  <td style="color:var(--gold)">74%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">📊 توزيع المعدلات التراكمية</div>
+          </div>
+          <div class="card-body">
+            <div style="padding: 8px 0;">
+              <div class="course-row">
+                <div class="course-name">4.5 - 5.0 (ممتاز)</div>
+                <div class="course-bar-wrap"><div class="course-bar" style="width:18%; background:var(--green)"></div></div>
+                <div class="course-grade" style="color:var(--green)">44</div>
+              </div>
+              <div class="course-row">
+                <div class="course-name">3.75 - 4.5 (جيد جداً)</div>
+                <div class="course-bar-wrap"><div class="course-bar" style="width:38%; background:var(--teal)"></div></div>
+                <div class="course-grade" style="color:var(--teal-light)">94</div>
+              </div>
+              <div class="course-row">
+                <div class="course-name">3.0 - 3.75 (جيد)</div>
+                <div class="course-bar-wrap"><div class="course-bar" style="width:26%; background:var(--blue)"></div></div>
+                <div class="course-grade" style="color:#60A5FA">65</div>
+              </div>
+              <div class="course-row">
+                <div class="course-name">2.5 - 3.0 (مقبول)</div>
+                <div class="course-bar-wrap"><div class="course-bar" style="width:12%; background:var(--gold)"></div></div>
+                <div class="course-grade" style="color:var(--gold)">29</div>
+              </div>
+              <div class="course-row">
+                <div class="course-name">أقل من 2.5 (خطر)</div>
+                <div class="course-bar-wrap"><div class="course-bar" style="width:6%; background:var(--red)"></div></div>
+                <div class="course-grade" style="color:var(--red)">16</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN STUDENTS LIST -->
+    <div class="page" id="page-admin-students">
+      <div class="page-header">
+        <div>
+          <div class="page-title">👨‍🎓 إدارة الطلاب</div>
+          <div class="page-subtitle">جميع الطلاب المسجلين في النظام</div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;"><button class="filter-btn" onclick="exportAllSurveysPDF()" title="تقرير استبيانات الطلاب">📄 تقرير الاستبيان PDF</button><button class="filter-btn" onclick="cleanupGuestRecords()" title="إزالة سجلات guest">🧹 حذف guest</button><button class="action-btn">➕ إضافة طالب</button></div>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" class="search-input" id="students-search" placeholder="🔍 بحث عن طالب بالاسم أو الرقم الجامعي..." oninput="filterStudents(this.value)">
+        <button class="filter-btn active" onclick="filterByRisk('all', this)">الكل</button>
+        <button class="filter-btn" onclick="filterByRisk('high', this)">🔴 عالي</button>
+        <button class="filter-btn" onclick="filterByRisk('med', this)">🟡 متوسط</button>
+        <button class="filter-btn" onclick="filterByRisk('low', this)">🟢 منخفض</button>
+      </div>
+
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <div class="students-table-wrap">
+            <table class="data-table" id="students-table">
+              <thead>
+                <tr>
+                  <th>الطالب</th>
+                  <th>الرقم الجامعي</th>
+                  <th>المعدل الحالي</th>
+                  <th>المعدل المتوقع</th>
+                  <th>الحضور</th>
+                  <th>مستوى الخطر</th>
+                  <th>ملاحظة</th>
+                  <th>الإجراء</th>
+                </tr>
+              </thead>
+              <tbody id="students-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN ALERTS -->
+    <div class="page" id="page-admin-alerts">
+      <div class="page-header">
+        <div>
+          <div class="page-title">📢 إدارة التنبيهات</div>
+          <div class="page-subtitle">مراقبة وإرسال التنبيهات للطلاب</div>
+        </div>
+        <button class="action-btn" onclick="sendAlert()">📨 إرسال تنبيه جديد</button>
+      </div>
+
+      <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="stat-card red"><div class="stat-icon">🚨</div><div class="stat-value">23</div><div class="stat-label">تنبيهات غير معالجة</div></div>
+        <div class="stat-card gold"><div class="stat-icon">📤</div><div class="stat-value">156</div><div class="stat-label">إجمالي المرسلة</div></div>
+        <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-value">133</div><div class="stat-label">تم الاطلاع عليها</div></div>
+        <div class="stat-card blue"><div class="stat-icon">🤖</div><div class="stat-value">89%</div><div class="stat-label">تنبيهات تلقائية</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📋 سجل التنبيهات الأخيرة</div>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>الطالب</th>
+                <th>نوع التنبيه</th>
+                <th>الوصف</th>
+                <th>التاريخ</th>
+                <th>الحالة</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>أحمد الزهراني</td>
+                <td><span class="tag tag-red">انخفاض حضور</span></td>
+                <td style="font-family:'Tajawal',sans-serif; font-size:12px">نسبة الحضور أقل من 70%</td>
+                <td style="color:var(--text-dim); font-size:12px">اليوم</td>
+                <td><span class="tag tag-yellow">معلق</span></td>
+              </tr>
+              <tr>
+                <td>نورة السبيعي</td>
+                <td><span class="tag tag-yellow">تراجع المعدل</span></td>
+                <td style="font-family:'Tajawal',sans-serif; font-size:12px">انخفاض المعدل 0.3 نقطة</td>
+                <td style="color:var(--text-dim); font-size:12px">أمس</td>
+                <td><span class="tag tag-green">تمت القراءة</span></td>
+              </tr>
+              <tr>
+                <td>محمد العتيبي</td>
+                <td><span class="tag tag-red">خطر الرسوب</span></td>
+                <td style="font-family:'Tajawal',sans-serif; font-size:12px">معدل دون حد الإنذار الأكاديمي</td>
+                <td style="color:var(--text-dim); font-size:12px">3 أيام</td>
+                <td><span class="tag tag-yellow">معلق</span></td>
+              </tr>
+              <tr>
+                <td>سارة القحطاني</td>
+                <td><span class="tag tag-blue">توصية دورة</span></td>
+                <td style="font-family:'Tajawal',sans-serif; font-size:12px">دورة Python متاحة على Doroob</td>
+                <td style="color:var(--text-dim); font-size:12px">أسبوع</td>
+                <td><span class="tag tag-green">تمت القراءة</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN COURSES -->
+    <div class="page" id="page-admin-courses">
+      <div class="page-header">
+        <div>
+          <div class="page-title">📚 إدارة الموارد التعليمية</div>
+          <div class="page-subtitle">إضافة وتعديل الدورات الخارجية الموصى بها</div>
+        </div>
+        <button class="action-btn">➕ إضافة دورة</button>
+      </div>
+
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>اسم الدورة</th>
+                <th>المنصة</th>
+                <th>المادة المرتبطة</th>
+                <th>عدد التسجيلات</th>
+                <th>الحالة</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight:600">Python for Data Science</td>
+                <td><span class="tag tag-blue">Doroob</span></td>
+                <td>البرمجة المتقدمة</td>
+                <td style="color:var(--teal-light); font-weight:700">45</td>
+                <td><span class="tag tag-green">نشطة</span></td>
+                <td><button class="action-btn" style="padding:5px 12px; font-size:11px">تعديل</button></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600">SQL Mastery Course</td>
+                <td><span class="tag tag-green">Coursera</span></td>
+                <td>قواعد البيانات</td>
+                <td style="color:var(--teal-light); font-weight:700">38</td>
+                <td><span class="tag tag-green">نشطة</span></td>
+                <td><button class="action-btn" style="padding:5px 12px; font-size:11px">تعديل</button></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600">Machine Learning Basics</td>
+                <td><span class="tag tag-blue">FutureX</span></td>
+                <td>الذكاء الاصطناعي</td>
+                <td style="color:var(--teal-light); font-weight:700">61</td>
+                <td><span class="tag tag-green">نشطة</span></td>
+                <td><button class="action-btn" style="padding:5px 12px; font-size:11px">تعديل</button></td>
+              </tr>
+              <tr>
+                <td style="font-weight:600">Networking Fundamentals</td>
+                <td><span class="tag tag-yellow">Satr</span></td>
+                <td>شبكات الحاسوب</td>
+                <td style="color:var(--text-dim)">12</td>
+                <td><span class="tag tag-yellow">مراجعة</span></td>
+                <td><button class="action-btn" style="padding:5px 12px; font-size:11px">تعديل</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main-content -->
+
+</div><!-- end app -->
+
+<!-- CHATBOT FAB -->
+<button class="chatbot-fab" onclick="toggleChat()" id="chat-fab" style="display:none;">🤖</button>
+
+<div class="chatbot-panel" id="chat-panel">
+  <div class="chat-header">
+    <div class="chat-avatar">🤖</div>
+    <div>
+      <div class="chat-name">مساعد ناصوح</div>
+      <div class="chat-status">● متاح الآن</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chat-messages">
+    <div class="chat-msg bot">مرحباً! أنا مساعد NASOOH الذكي. كيف يمكنني مساعدتك اليوم؟ 😊</div>
+    <div class="chat-msg bot">يمكنني مساعدتك في: معدلك الأكاديمي، توصيات الدورات، خطتك الدراسية، أو الإجابة على أي استفسار أكاديمي.</div>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" class="chat-input" id="chat-input" placeholder="اكتب رسالتك..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+
+<!-- STUDENT NOTE MODAL (ADMIN) -->
+<div class="modal-backdrop" id="note-modal" onclick="if(event.target===this) closeNoteModal();">
+  <div class="modal-card" onclick="event.stopPropagation();">
+    <div class="modal-header">
+      <div class="modal-title">📝 ملاحظة الطالب</div>
+      <button class="modal-close" onclick="closeNoteModal()" title="إغلاق">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-sub" id="note-student-label"></div>
+      <textarea class="note-textarea" id="note-text" placeholder="اكتب ملاحظة عن الطالب..."></textarea>
+      <div class="modal-actions">
+        <button class="filter-btn" onclick="closeNoteModal()">إلغاء</button>
+        <button class="action-btn" onclick="saveNoteModal()">💾 حفظ</button>
+      </div>
+      <div class="modal-hint">ملاحظة: يتم حفظ الملاحظات داخل المتصفح (LocalStorage) في هذا النموذج.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- STUDENT SURVEY MODAL (ONE-TIME) -->
+<div class="modal-backdrop" id="survey-modal">
+  <div class="modal-card survey" onclick="event.stopPropagation();">
+    <div class="modal-header">
+      <div class="modal-title">🧾 استبيان حالة الطالب (مرة واحدة)</div>
+      <div style="font-size:12px; color:rgba(148,163,184,0.9); font-family:'Tajawal',sans-serif;">
+        يتم حفظ الاستبيان داخل المتصفح ويظهر للمشرف عبر تقرير PDF.
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-sub" id="survey-student-label"></div>
+
+      <div class="survey-grid">
+        <div class="survey-field">
+          <label>كيف تقيّم حالتك الأكاديمية حالياً؟ *</label>
+          <select class="survey-select" id="sv-academic-state">
+            <option value="">اختر…</option>
+            <option>ممتازة</option>
+            <option>جيدة</option>
+            <option>متوسطة</option>
+            <option>ضعيفة</option>
+          </select>
+        </div>
+
+        <div class="survey-field">
+          <label>الحالة المادية الحالية *</label>
+          <select class="survey-select" id="sv-financial-state">
+            <option value="">اختر…</option>
+            <option>ميسورة</option>
+            <option>متوسطة</option>
+            <option>صعبة</option>
+          </select>
+        </div>
+
+        <div class="survey-field full">
+          <label>هل تواجه صعوبات دراسية حالياً؟ *</label>
+          <div class="radio-row">
+            <label><input type="radio" name="sv-acad-diff" value="yes"> نعم</label>
+            <label><input type="radio" name="sv-acad-diff" value="no"> لا</label>
+          </div>
+        </div>
+
+        <div class="survey-field full">
+          <label>إن كانت الإجابة نعم، اكتب تفاصيل مختصرة (اختياري)</label>
+          <input class="survey-input" id="sv-acad-diff-details" placeholder="مثال: صعوبة في مادة قواعد البيانات، ضعف في المذاكرة…">
+        </div>
+
+        <div class="survey-field full">
+          <label>هل توجد مشاكل صحية/نفسية تؤثر على الدراسة؟ *</label>
+          <div class="radio-row">
+            <label><input type="radio" name="sv-health" value="yes"> نعم</label>
+            <label><input type="radio" name="sv-health" value="no"> لا</label>
+          </div>
+        </div>
+
+        <div class="survey-field full">
+          <label>تفاصيل (اختياري)</label>
+          <input class="survey-input" id="sv-health-details" placeholder="مثال: توتر، قلق، مشكلة صحية…">
+        </div>
+
+        <div class="survey-field full">
+          <label>هل تعمل بجانب الدراسة؟ *</label>
+          <div class="radio-row">
+            <label><input type="radio" name="sv-work" value="yes"> نعم</label>
+            <label><input type="radio" name="sv-work" value="no"> لا</label>
+          </div>
+        </div>
+
+        <div class="survey-field">
+          <label>عدد ساعات العمل أسبوعياً (إن وجد)</label>
+          <input class="survey-input" id="sv-work-hours" type="number" min="0" max="80" placeholder="مثال: 20">
+        </div>
+
+        <div class="survey-field">
+          <label>هل تحتاج دعم مالي؟ *</label>
+          <div class="radio-row" style="padding:10px 12px;">
+            <label><input type="radio" name="sv-fin-need" value="yes"> نعم</label>
+            <label><input type="radio" name="sv-fin-need" value="no"> لا</label>
+          </div>
+        </div>
+
+        <div class="survey-field full">
+          <label>نوع الدعم المطلوب (اختياري)</label>
+          <div class="check-row" id="sv-support-wrap">
+            <label><input type="checkbox" value="إرشاد أكاديمي"> إرشاد أكاديمي</label>
+            <label><input type="checkbox" value="دروس تقوية"> دروس تقوية</label>
+            <label><input type="checkbox" value="دعم نفسي"> دعم نفسي</label>
+            <label><input type="checkbox" value="دعم مالي"> دعم مالي</label>
+            <label><input type="checkbox" value="أخرى"> أخرى</label>
+          </div>
+        </div>
+
+        <div class="survey-field full">
+          <label>ملاحظات إضافية (اختياري)</label>
+          <textarea class="survey-textarea" id="sv-extra" placeholder="اكتب أي شيء تحب توصيله للمشرف…"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top:14px;">
+        <button class="action-btn" onclick="saveSurveyModal()">💾 حفظ الاستبيان والمتابعة</button>
+      </div>
+      <div class="modal-hint">* هذا الاستبيان يظهر مرة واحدة عند أول تسجيل دخول لكل طالب. يمكن للمشرف استخراج تقرير PDF في أي وقت.</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ====== DATA ======
+let currentRole = 'student';
+let notifOpen = false;
+
+const LAST_STUDENT_LOGIN_KEY = 'NASOOH_last_student_login_v1';
+const LAST_STUDENT_ID_KEY = 'NASOOH_last_student_id_v1';
+const LAST_ADMIN_LOGIN_KEY = 'NASOOH_last_admin_login_v1';
+
+// ====== THEME (Dark/Light) ======
+const THEME_KEY = 'NASOOH_theme_v1';
+
+function getPreferredTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved === 'light' || saved === 'dark') return saved;
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+  } catch (e) {}
+  return 'dark';
+}
+
+function updateThemeIcons(theme) {
+  const nextIcon = (theme === 'dark') ? '☀️' : '🌙';
+  const nextLabel = (theme === 'dark') ? 'تفعيل الوضع النهاري' : 'تفعيل الوضع الليلي';
+
+  document.querySelectorAll('#theme-toggle-btn, #theme-toggle-login').forEach((btn) => {
+    if (!btn) return;
+    btn.title = nextLabel;
+    btn.setAttribute('aria-label', nextLabel);
+    const icon = btn.querySelector('.theme-icon');
+    if (icon) icon.textContent = nextIcon;
+    else btn.textContent = nextIcon;
+  });
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem(THEME_KEY, theme);
+  updateThemeIcons(theme);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(getPreferredTheme());
+});
+
+
+const STUDENT_NOTES_KEY = 'NASOOH_student_notes_v1';
+let studentNotes = {};
+let activeRiskFilter = 'all';
+let lastStudentSearch = '';
+let noteEditingId = null;
+let currentLoginUser = '';
+let currentStudentId = '';
+let currentStudentName = '';
+
+const STUDENT_SURVEYS_KEY = 'NASOOH_student_surveys_v1';
+let studentSurveys = {};
+
+const DYN_STUDENTS_KEY = 'NASOOH_students_dynamic_v1';
+let dynamicStudents = [];
+
+function loadStudentSurveys() {
+  try {
+    const raw = localStorage.getItem(STUDENT_SURVEYS_KEY);
+    const obj = raw ? JSON.parse(raw) : {};
+    studentSurveys = (obj && typeof obj === 'object') ? obj : {};
+  } catch (e) { studentSurveys = {}; }
+}
+function persistStudentSurveys() {
+  try { localStorage.setItem(STUDENT_SURVEYS_KEY, JSON.stringify(studentSurveys)); } catch (e) {}
+}
+function getStudentSurvey(studentId) {
+  return (studentSurveys && studentSurveys[studentId]) ? studentSurveys[studentId] : null;
+}
+function setStudentSurvey(studentId, surveyObj) {
+  studentSurveys[studentId] = surveyObj;
+  persistStudentSurveys();
+}
+
+function loadDynamicStudents() {
+  try {
+    const raw = localStorage.getItem(DYN_STUDENTS_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    dynamicStudents = Array.isArray(arr) ? arr : [];
+  } catch (e) { dynamicStudents = []; }
+}
+function persistDynamicStudents() {
+  try { localStorage.setItem(DYN_STUDENTS_KEY, JSON.stringify(dynamicStudents)); } catch (e) {}
+}
+
+function getAllStudents() {
+  const map = {};
+  students.forEach(s => map[s.id] = s);
+  dynamicStudents.forEach(s => map[s.id] = s);
+  return Object.values(map);
+}
+function findStudentById(studentId) {
+  return getAllStudents().find(s => s.id === studentId) || null;
+}
+function parseStudentIdFromLogin(userStr) {
+  const raw = String(userStr || '').trim();
+  const left = raw.includes('@') ? raw.split('@')[0] : raw;
+  const id = String(left || '').trim();
+  // Prevent accidental 'guest' bindings
+  if (!id || id.toLowerCase() === 'guest') {
+    const last = String(localStorage.getItem(LAST_STUDENT_ID_KEY) || localStorage.getItem(LAST_STUDENT_LOGIN_KEY) || 's443460269@std.su.edu.sa').trim();
+    const lleft = last.includes('@') ? last.split('@')[0] : last;
+    return String(lleft || 's443460269').trim();
+  }
+  return id;
+}
+function getInitial(name) {
+  const t = String(name || '').trim();
+  if (!t) return 'ط';
+  return t[0];
+}
+function ensureStudentExists(studentId, fallbackName) {
+  let st = findStudentById(studentId);
+  if (st) return st;
+
+  const nm = (fallbackName && String(fallbackName).trim()) ? String(fallbackName).trim() : `طالب ${studentId}`;
+  st = { name: nm, id: studentId, gpa: 0, pred: 0, attend: 0, risk: 'med' };
+  dynamicStudents.push(st);
+  persistDynamicStudents();
+  return st;
+}
+
+function maybeShowSurveyOnce() {
+  if (currentRole !== 'student') return;
+  if (!currentStudentId) return;
+  const existing = getStudentSurvey(currentStudentId);
+  if (existing) return;
+
+  // Open survey modal
+  document.getElementById('survey-student-label').textContent = `${currentStudentName} — ${currentStudentId}`;
+  const modal = document.getElementById('survey-modal');
+  modal.style.display = 'flex';
+  // Clear fields
+  document.getElementById('sv-academic-state').value = '';
+  document.getElementById('sv-financial-state').value = '';
+  document.querySelectorAll('input[name="sv-acad-diff"]').forEach(x => x.checked = false);
+  document.getElementById('sv-acad-diff-details').value = '';
+  document.querySelectorAll('input[name="sv-health"]').forEach(x => x.checked = false);
+  document.getElementById('sv-health-details').value = '';
+  document.querySelectorAll('input[name="sv-work"]').forEach(x => x.checked = false);
+  document.getElementById('sv-work-hours').value = '';
+  document.querySelectorAll('input[name="sv-fin-need"]').forEach(x => x.checked = false);
+  document.querySelectorAll('#sv-support-wrap input[type="checkbox"]').forEach(x => x.checked = false);
+  document.getElementById('sv-extra').value = '';
+}
+
+function closeSurveyModal() {
+  const modal = document.getElementById('survey-modal');
+  modal.style.display = 'none';
+}
+
+function saveSurveyModal() {
+  // Validate required
+  const academicState = document.getElementById('sv-academic-state').value;
+  const financialState = document.getElementById('sv-financial-state').value;
+
+  const acadDiffEl = document.querySelector('input[name="sv-acad-diff"]:checked');
+  const healthEl = document.querySelector('input[name="sv-health"]:checked');
+  const workEl = document.querySelector('input[name="sv-work"]:checked');
+  const finNeedEl = document.querySelector('input[name="sv-fin-need"]:checked');
+
+  if (!academicState || !financialState || !acadDiffEl || !healthEl || !workEl || !finNeedEl) {
+    alert('فضلاً أكمل الحقول الإلزامية (*) قبل الحفظ.');
+    return;
+  }
+
+  const support = Array.from(document.querySelectorAll('#sv-support-wrap input[type="checkbox"]:checked')).map(x => x.value);
+
+  // Canonicalize student identity (avoid saving under 'guest')
+  const sid = parseStudentIdFromLogin(currentLoginUser || currentStudentId);
+  const st = ensureStudentExists(sid);
+  currentStudentId = sid;
+  currentStudentName = st.name;
+
+  const surveyObj = {
+    studentId: sid,
+    studentName: st.name,
+    submittedAt: new Date().toISOString(),
+    academicState,
+    academicDifficulties: {
+      has: acadDiffEl.value === 'yes',
+      details: String(document.getElementById('sv-acad-diff-details').value || '').trim()
+    },
+    financialState,
+    financialNeed: finNeedEl.value === 'yes',
+    healthIssues: {
+      has: healthEl.value === 'yes',
+      details: String(document.getElementById('sv-health-details').value || '').trim()
+    },
+    works: {
+      has: workEl.value === 'yes',
+      hoursPerWeek: Number(document.getElementById('sv-work-hours').value || 0)
+    },
+    requestedSupport: support,
+    extra: String(document.getElementById('sv-extra').value || '').trim()
+  };
+
+  setStudentSurvey(sid, surveyObj);
+  closeSurveyModal();
+  alert('تم حفظ الاستبيان ✅');
+  applyStudentFilters(); // refresh admin table status if needed
+}
+
+function formatISO(iso) {
+  try {
+    const d = new Date(iso);
+    const pad = (n) => String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  } catch (e) { return String(iso || ''); }
+}
+
+function exportAllSurveysPDF() {
+  openSurveyReportWindow(null);
+}
+function exportSingleSurveyPDF(studentId) {
+  openSurveyReportWindow(studentId);
+}
+
+function openSurveyReportWindow(studentId) {
+  loadStudentSurveys();
+  loadDynamicStudents();
+
+  const surveys = studentSurveys || {};
+  const allMap = {};
+  getAllStudents().forEach(s => allMap[s.id] = s);
+  Object.keys(surveys).forEach(id => {
+    if (!allMap[id]) allMap[id] = { name: cleanReportName(surveys[id].studentName, `طالب ${id}`), id, gpa: 0, pred: 0, attend: 0, risk: 'med' };
+  });
+
+  let ids = Object.keys(allMap).sort();
+  if (studentId) ids = ids.filter(x => x === studentId);
+
+  const completedCount = ids.filter(id => !!surveys[id]).length;
+  const totalCount = ids.length;
+
+  const rows = ids.map(id => {
+    const s = allMap[id];
+    const sv = surveys[id];
+
+    if (!sv) {
+      return `
+        <div class="box">
+          <div class="h">👤 ${escapeHTML(s.name)} — <span class="dim">${escapeHTML(s.id)}</span></div>
+          <div class="dim">لم يتم تعبئة الاستبيان بعد.</div>
+        </div>
+      `;
+    }
+
+    const support = (sv.requestedSupport && sv.requestedSupport.length) ? sv.requestedSupport.map(escapeHTML).join('، ') : '—';
+    const yesNo = (b) => b ? 'نعم' : 'لا';
+
+    return `
+      <div class="box">
+        <div class="h">👤 ${escapeHTML(sv.studentName || s.name)} — <span class="dim">${escapeHTML(id)}</span></div>
+        <div class="meta">تاريخ الإرسال: ${escapeHTML(formatISO(sv.submittedAt))}</div>
+        <div class="grid">
+          <div><span class="k">الحالة الأكاديمية:</span> ${escapeHTML(sv.academicState)}</div>
+          <div><span class="k">الحالة المادية:</span> ${escapeHTML(sv.financialState)}</div>
+          <div><span class="k">صعوبات دراسية:</span> ${yesNo(sv.academicDifficulties?.has)}</div>
+          <div><span class="k">دعم مالي:</span> ${yesNo(!!sv.financialNeed)}</div>
+          <div class="full"><span class="k">تفاصيل الصعوبات:</span> ${escapeHTML(sv.academicDifficulties?.details || '—')}</div>
+          <div><span class="k">مشاكل صحية/نفسية:</span> ${yesNo(sv.healthIssues?.has)}</div>
+          <div><span class="k">يعمل بجانب الدراسة:</span> ${yesNo(sv.works?.has)}</div>
+          <div class="full"><span class="k">تفاصيل صحية/نفسية:</span> ${escapeHTML(sv.healthIssues?.details || '—')}</div>
+          <div><span class="k">ساعات العمل/أسبوع:</span> ${escapeHTML(String(sv.works?.hoursPerWeek ?? 0))}</div>
+          <div class="full"><span class="k">الدعم المطلوب:</span> ${support}</div>
+          <div class="full"><span class="k">ملاحظات إضافية:</span> ${escapeHTML(sv.extra || '—')}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const now = new Date();
+  const title = studentId ? `تقرير استبيان الطالب ${studentId}` : 'تقرير استبيانات الطلاب';
+  const html = `
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${escapeHTML(title)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  body{ font-family: 'Cairo', sans-serif; margin: 22px; color:#0b1f3a; }
+  .top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  h1{ margin:0; font-size: 20px; }
+  .sub{ margin-top:6px; font-family:'Tajawal',sans-serif; color:#334155; font-size:12px; }
+  .btn{ padding:10px 14px; border-radius:12px; border:1px solid #0d9488; background:#0d9488; color:#fff; cursor:pointer; font-weight:800; font-family:'Cairo',sans-serif; }
+  .btn2{ padding:10px 14px; border-radius:12px; border:1px solid #cbd5e1; background:#fff; color:#0b1f3a; cursor:pointer; font-weight:800; font-family:'Cairo',sans-serif; margin-right:8px; }
+  .summary{ margin-top:14px; padding:12px 14px; border:1px solid #e2e8f0; border-radius:14px; background:#f8fafc; font-family:'Tajawal',sans-serif; }
+  .box{ margin-top:14px; padding:14px 14px; border:1px solid #e2e8f0; border-radius:14px; background:#fff; page-break-inside: avoid; }
+  .h{ font-weight:900; font-size: 15px; }
+  .meta{ margin-top:6px; color:#475569; font-family:'Tajawal',sans-serif; font-size:12px; }
+  .dim{ color:#64748b; font-family:'Tajawal',sans-serif; }
+  .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:10px 14px; margin-top:10px; font-family:'Tajawal',sans-serif; font-size:13px; }
+  .grid .full{ grid-column: 1 / -1; }
+  .k{ font-weight:800; }
+  @media print{
+    .no-print{ display:none !important; }
+    body{ margin: 10mm; }
+  }
+</style>
+</head>
+<body>
+  <div class="top no-print">
+    <div>
+      <h1>${escapeHTML(title)} — NASOOH</h1>
+      <div class="sub">تم الإنشاء: ${escapeHTML(formatISO(now.toISOString()))} &nbsp;|&nbsp; المكتمل: ${completedCount}/${totalCount}</div>
+    </div>
+    <div>
+      <button class="btn2" onclick="window.close()">إغلاق</button>
+      <button class="btn" onclick="window.print()">🖨️ طباعة / حفظ PDF</button>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div><b>ملخص:</b> عدد الطلاب في التقرير: ${totalCount} — الاستبيانات المكتملة: ${completedCount}</div>
+    <div style="margin-top:6px;">ملاحظة: لحفظ ملف PDF اختر (طباعة) ثم اختر (Save as PDF).</div>
+  </div>
+
+  ${rows}
+</body>
+</html>
+  `.trim();
+
+  const w = window.open('', '_blank');
+  if (!w) { alert('تعذر فتح نافذة جديدة. تأكد من السماح بالنوافذ المنبثقة.'); return; }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+}
+
+
+function loadStudentNotes() {
+  try {
+    const raw = localStorage.getItem(STUDENT_NOTES_KEY);
+    const obj = raw ? JSON.parse(raw) : {};
+    studentNotes = (obj && typeof obj === 'object') ? obj : {};
+  } catch (e) {
+    studentNotes = {};
+  }
+}
+
+function persistStudentNotes() {
+  try { localStorage.setItem(STUDENT_NOTES_KEY, JSON.stringify(studentNotes)); } catch (e) {}
+}
+
+function getStudentNote(studentId) {
+  return (studentNotes && studentNotes[studentId]) ? String(studentNotes[studentId]) : '';
+}
+
+function setStudentNote(studentId, note) {
+  const v = String(note || '').trim();
+  if (v) studentNotes[studentId] = v;
+  else delete studentNotes[studentId];
+  persistStudentNotes();
+}
+
+function escapeHTML(str) {
+  return String(str).replace(/[&<>"']/g, (s) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[s]);
+}
+
+
+
+function cleanReportName(name, fallback) {
+  const n = String(name || '').trim();
+  const fb = String(fallback || '').trim();
+  if (!n) return fb || '—';
+  const low = n.toLowerCase();
+  if (low === 'guest' || low.includes('guest') || low === 'anonymous' || low.includes('anon')) return fb || n;
+  return n;
+}
+function cleanupGuestRecords() {
+  loadStudentSurveys();
+  loadStudentNotes();
+  loadDynamicStudents();
+  const ok = confirm('سيتم حذف أي بيانات محفوظة تحت اسم guest (استبيان/ملاحظات/طالب ديناميكي). هل تريد المتابعة؟');
+  if (!ok) return;
+  ['guest','Guest'].forEach(id => {
+    if (studentSurveys && studentSurveys[id]) delete studentSurveys[id];
+    if (studentNotes && studentNotes[id]) delete studentNotes[id];
+  });
+  // remove dynamic student with id=guest
+  dynamicStudents = (dynamicStudents || []).filter(s => String(s.id || '').toLowerCase() !== 'guest');
+  persistStudentSurveys();
+  persistStudentNotes();
+  persistDynamicStudents();
+  applyStudentFilters();
+  alert('تم التنظيف ✅');
+}
+
+function applyStudentFilters() {
+  let data = getAllStudents().slice();
+
+  if (activeRiskFilter !== 'all') {
+    data = data.filter(s => s.risk === activeRiskFilter);
+  }
+
+  if (lastStudentSearch) {
+    const q = lastStudentSearch;
+    data = data.filter(s => s.name.includes(q) || s.id.includes(q));
+  }
+
+  renderStudentsTable(data);
+}
+
+function openNoteModal(studentId, studentNameEnc) {
+  noteEditingId = studentId;
+  const name = studentNameEnc ? decodeURIComponent(studentNameEnc) : '';
+  document.getElementById('note-student-label').textContent = `${name} — ${studentId}`;
+  document.getElementById('note-text').value = getStudentNote(studentId);
+  const modal = document.getElementById('note-modal');
+  modal.style.display = 'flex';
+  setTimeout(() => document.getElementById('note-text').focus(), 10);
+}
+
+function closeNoteModal() {
+  const modal = document.getElementById('note-modal');
+  modal.style.display = 'none';
+  noteEditingId = null;
+}
+
+function saveNoteModal() {
+  if (!noteEditingId) return closeNoteModal();
+  const val = document.getElementById('note-text').value || '';
+  setStudentNote(noteEditingId, val);
+  closeNoteModal();
+  applyStudentFilters();
+}
+
+
+const students = [
+  { name: 'هشام الساعد', id: 's443460269', gpa: 3.72, pred: 3.65, attend: 92, risk: 'low' },
+  { name: 'فيصل الثنيان', id: 's443420173', gpa: 3.45, pred: 3.50, attend: 88, risk: 'low' },
+  { name: 'محمد الدوسري', id: 's443420200', gpa: 3.10, pred: 3.05, attend: 79, risk: 'med' },
+  { name: 'أحمد الزهراني', id: 's441390011', gpa: 2.10, pred: 1.90, attend: 61, risk: 'high' },
+  { name: 'نورة السبيعي', id: 's441390022', gpa: 2.45, pred: 2.30, attend: 72, risk: 'med' },
+  { name: 'محمد العتيبي', id: 's441390033', gpa: 2.30, pred: 2.10, attend: 65, risk: 'high' },
+  { name: 'ريم الغامدي', id: 's441390044', gpa: 2.60, pred: 2.70, attend: 74, risk: 'med' },
+  { name: 'سارة القحطاني', id: 's441390055', gpa: 3.85, pred: 3.90, attend: 95, risk: 'low' },
+  { name: 'خالد المالكي', id: 's441390066', gpa: 4.20, pred: 4.15, attend: 97, risk: 'low' },
+  { name: 'لينا الشهري', id: 's441390077', gpa: 3.30, pred: 3.20, attend: 81, risk: 'med' },
+];
+
+const courses = [
+  { name: 'قواعد البيانات', grade: 72, color: '#F59E0B' },
+  { name: 'خوارزميات', grade: 88, color: '#10B981' },
+  { name: 'شبكات الحاسوب', grade: 92, color: '#0D9488' },
+  { name: 'البرمجة OOP', grade: 80, color: '#3B82F6' },
+  { name: 'أنظمة التشغيل', grade: 76, color: '#F59E0B' },
+  { name: 'الذكاء الاصطناعي', grade: 84, color: '#10B981' },
+];
+
+const recs = [
+  { title: 'Python for Data Science', platform: 'Doroob', subject: 'البرمجة المتقدمة', duration: '20 ساعة', cert: 'شهادة معتمدة', icon: '🐍' },
+  { title: 'SQL Database Mastery', platform: 'Coursera', subject: 'قواعد البيانات', duration: '15 ساعة', cert: 'شهادة Google', icon: '🗄️' },
+  { title: 'Machine Learning Basics', platform: 'FutureX', subject: 'الذكاء الاصطناعي', duration: '30 ساعة', cert: 'شهادة معتمدة', icon: '🤖' },
+  { title: 'Cloud Computing AWS', platform: 'Satr', subject: 'الحوسبة السحابية', duration: '25 ساعة', cert: 'AWS Certified', icon: '☁️' },
+];
+
+const chatReplies = {
+  'معدل': 'معدلك التراكمي الحالي هو 3.72 من 5.0. هذا معدل جيد! المتوقع للفصل القادم هو 3.65. 📊',
+  'دورة': 'أنصحك بالالتحاق بدورة Python on Doroob وSQL on Coursera بناءً على ضعفك في مادة قواعد البيانات. 🎯',
+  'خطر': 'مستواك الأكاديمي في المنطقة الآمنة حالياً ✅. لكن انتبه لمعدل حضورك في قواعد البيانات.',
+  'حضور': 'نسبة حضورك الإجمالية 89%، لكن في مادة قواعد البيانات هي 68% ⚠️ وهذا أقل من المطلوب.',
+  'مسار': 'بناءً على أداءك، يُنصح بمسار مهندس بيانات (Data Engineer) 🏆 وهو من أكثر المسارات طلباً في رؤية 2030.',
+  'ترتيب': 'أنت أفضل من 73% من طلاب كلية الحوسبة وتقنية المعلومات! 🏆 استمر في هذا الأداء الممتاز.',
+  default: 'شكراً لسؤالك! يمكنني مساعدتك في: معدلك الأكاديمي، الدورات الموصى بها، مستوى الخطر، أو مسارك الوظيفي. كيف أساعدك؟ 😊'
+};
+
+// ====== LOGIN ======
+function selectRole(role, btn) {
+  currentRole = role;
+  document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('login-user').placeholder = role === 'admin'
+    ? 'admin@su.edu.sa'
+    : 's443460269@std.su.edu.sa';
+}
+
+function doLogin() {
+  // Use last login / sensible defaults (avoid empty username)
+  let user = String(document.getElementById('login-user').value || '').trim();
+
+  
+  // If someone typed 'guest' as a student login, fallback to last real student
+  if (currentRole === 'student' && user && user.toLowerCase() === 'guest') {
+    user = String(localStorage.getItem(LAST_STUDENT_LOGIN_KEY) || 's443460269@std.su.edu.sa').trim();
+  }
+if (!user) {
+    if (currentRole === 'admin') {
+      user = String(localStorage.getItem(LAST_ADMIN_LOGIN_KEY) || 'admin@su.edu.sa').trim();
+    } else {
+      user = String(localStorage.getItem(LAST_STUDENT_LOGIN_KEY) || 's443460269@std.su.edu.sa').trim();
+    }
+  }
+
+  currentLoginUser = user;
+
+  try {
+    if (currentRole === 'admin') localStorage.setItem(LAST_ADMIN_LOGIN_KEY, currentLoginUser);
+    else localStorage.setItem(LAST_STUDENT_LOGIN_KEY, currentLoginUser);
+  } catch (e) {}
+
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('chat-fab').style.display = 'flex';
+  setupApp();
+}
+
+function doLogout() {
+  currentLoginUser = '';
+  currentStudentId = '';
+  currentStudentName = '';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('chat-fab').style.display = 'none';
+  document.getElementById('chat-panel').classList.remove('open');
+}
+
+// ====== SETUP APP ======
+function setupApp() {
+  loadStudentNotes();
+  loadDynamicStudents();
+  loadStudentSurveys();
+
+  if (currentRole === 'student') {
+    setupStudentSidebar();
+
+    currentStudentId = parseStudentIdFromLogin(currentLoginUser);
+    try { localStorage.setItem(LAST_STUDENT_ID_KEY, currentStudentId); } catch (e) {}
+    const st = ensureStudentExists(currentStudentId);
+    currentStudentName = st.name;
+
+    document.getElementById('user-display-name').textContent = currentStudentName;
+    document.getElementById('user-id-display').textContent = currentStudentId;
+    document.getElementById('user-role-label').textContent = 'طالب';
+    document.getElementById('user-initials').textContent = getInitial(currentStudentName);
+
+    // Sync profile header (avoid showing login handle instead of the real name)
+    const emailDisplay = String(currentLoginUser || '').includes('@')
+      ? String(currentLoginUser || '').trim()
+      : `${currentStudentId}@std.su.edu.sa`;
+
+    const pAv = document.getElementById('profile-avatar');
+    if (pAv) pAv.textContent = getInitial(currentStudentName);
+
+    const pName = document.getElementById('profile-name');
+    if (pName) pName.textContent = currentStudentName;
+
+    const pMeta = document.getElementById('profile-meta');
+    if (pMeta) pMeta.textContent = `${emailDisplay} | كلية الحوسبة وتقنية المعلومات | الفصل الدراسي: الثالث`;
+
+    showPage('student-dashboard');
+    // Show the one-time survey if not filled yet
+    setTimeout(maybeShowSurveyOnce, 80);
+  } else {
+    setupAdminSidebar();
+    document.getElementById('user-display-name').textContent = 'د. فايز ناهد';
+    document.getElementById('user-id-display').textContent = currentLoginUser || 'Falsehani@su.edu.sa';
+    document.getElementById('user-role-label').textContent = 'مشرف أكاديمي';
+    document.getElementById('user-initials').textContent = 'د';
+    showPage('admin-dashboard');
+  }
+
+  renderCourses();
+  renderRecs();
+  applyStudentFilters();
+}
+
+function setupStudentSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = `
+    <div class="nav-section-title">القائمة الرئيسية</div>
+    <div class="nav-item active" onclick="showPage('student-dashboard', this)">
+      <span class="nav-icon">🏠</span> لوحة التحكم
+    </div>
+    <div class="nav-item" onclick="showPage('student-prediction', this)">
+      <span class="nav-icon">🔮</span> توقع الأداء
+    </div>
+    <div class="nav-item" onclick="showPage('student-courses', this)">
+      <span class="nav-icon">🎯</span> التوصيات
+    </div>
+    <div class="nav-item" onclick="showPage('student-alerts', this)">
+      <span class="nav-icon">🔔</span> التنبيهات
+      <span class="nav-badge">3</span>
+    </div>
+  `;
+}
+
+function setupAdminSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = `
+    <div class="nav-section-title">إدارة النظام</div>
+    <div class="nav-item active" onclick="showPage('admin-dashboard', this)">
+      <span class="nav-icon">📊</span> لوحة التحكم
+    </div>
+    <div class="nav-item" onclick="showPage('admin-students', this)">
+      <span class="nav-icon">👨‍🎓</span> الطلاب
+    </div>
+    <div class="nav-item" onclick="showPage('admin-alerts', this)">
+      <span class="nav-icon">📢</span> التنبيهات
+      <span class="nav-badge">23</span>
+    </div>
+    <div class="nav-item" onclick="showPage('admin-courses', this)">
+      <span class="nav-icon">📚</span> الموارد التعليمية
+    </div>
+  `;
+}
+
+function showPage(id, navItem) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (navItem) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    navItem.classList.add('active');
+  }
+  // Update topbar
+  const titles = {
+    'student-dashboard': ['لوحة التحكم', 'نظرة عامة على أدائك الأكاديمي'],
+    'student-prediction': ['توقع الأداء', 'تحليل ذكي بناءً على بياناتك الأكاديمية'],
+    'student-courses': ['توصيات الدورات', 'دورات مقترحة لتحسين مسيرتك'],
+    'student-alerts': ['التنبيهات', 'تنبيهاتك الأكاديمية'],
+    'admin-dashboard': ['لوحة المشرف', 'نظرة عامة على النظام'],
+    'admin-students': ['إدارة الطلاب', 'جميع الطلاب المسجلين'],
+    'admin-alerts': ['التنبيهات', 'إدارة تنبيهات الطلاب'],
+    'admin-courses': ['الموارد التعليمية', 'الدورات والمواد الخارجية'],
+  };
+  if (titles[id]) {
+    document.getElementById('topbar-title').textContent = titles[id][0];
+    document.getElementById('topbar-sub').textContent = titles[id][1];
+  }
+}
+
+function showAdminPage(page) {
+  const items = document.querySelectorAll('.nav-item');
+  items.forEach(n => n.classList.remove('active'));
+  showPage(page);
+}
+
+// ====== RENDER ======
+function renderCourses() {
+  const el = document.getElementById('courses-bars');
+  if (!el) return;
+  el.innerHTML = courses.map(c => `
+    <div class="course-row">
+      <div class="course-name">${c.name}</div>
+      <div class="course-bar-wrap">
+        <div class="course-bar" style="width:${c.grade}%; background:${c.color}"></div>
+      </div>
+      <div class="course-grade" style="color:${c.color}">${c.grade}</div>
+    </div>
+  `).join('');
+}
+
+function renderRecs() {
+  const el = document.getElementById('recs-list');
+  if (!el) return;
+  el.innerHTML = recs.map(r => `
+    <div class="rec-item">
+      <div class="rec-platform">${r.icon}</div>
+      <div style="flex:1">
+        <div class="rec-title">${r.title}</div>
+        <div class="rec-meta">${r.platform} &nbsp;|&nbsp; ${r.subject} &nbsp;|&nbsp; ${r.duration} &nbsp;|&nbsp; ${r.cert}</div>
+      </div>
+      <button class="rec-enroll" onclick="alert('سيتم تحويلك إلى منصة ${r.platform}')">التسجيل ←</button>
+    </div>
+  `).join('');
+}
+
+function renderStudentsTable(data) {
+  const riskMap = {
+    low: ['🟢 منخفض', 'tag-green'],
+    med: ['🟡 متوسط', 'tag-yellow'],
+    high: ['🔴 عالي', 'tag-red']
+  };
+  const tbody = document.getElementById('students-tbody');
+  if (!tbody) return;
+
+  tbody.innerHTML = data.map(s => {
+    const r = riskMap[s.risk];
+    const attendColor = s.attend < 70 ? 'var(--red)' : s.attend < 80 ? 'var(--gold)' : 'var(--green)';
+
+    const rawNote = getStudentNote(s.id);
+    const short = rawNote
+      ? escapeHTML(rawNote.slice(0, 70)) + (rawNote.length > 70 ? '…' : '')
+      : '<span class="note-empty">—</span>';
+
+    const hasSurvey = !!getStudentSurvey(s.id);
+    const surveyBtn = hasSurvey
+      ? `<button class="filter-btn" style="padding:5px 10px; font-size:11px" onclick="exportSingleSurveyPDF('${s.id}')">📄 استبيان</button>`
+      : `<button class="filter-btn btn-disabled" style="padding:5px 10px; font-size:11px">📄 استبيان</button>`;
+
+    return `
+      <tr>
+        <td style="font-weight:600">${s.name}</td>
+        <td style="font-size:12px; color:var(--text-dim); font-family:'Tajawal',sans-serif">${s.id}</td>
+        <td style="font-weight:700; color:var(--teal-light)">${s.gpa.toFixed(2)}</td>
+        <td style="font-weight:700; color:var(--gold)">${s.pred.toFixed(2)}</td>
+        <td style="color:${attendColor}; font-weight:700">${s.attend}%</td>
+        <td><span class="tag ${r[1]}">${r[0]}</span></td>
+        <td>
+          <div class="note-cell">
+            <div class="note-snippet" title="${rawNote ? escapeHTML(rawNote) : 'لا توجد ملاحظة'}">${short}</div>
+            <button class="note-btn" title="إضافة/تعديل ملاحظة" onclick="openNoteModal('${s.id}', '${encodeURIComponent(s.name)}')">📝</button>
+          </div>
+        </td>
+        <td>
+          <div style="display:flex; gap:8px; justify-content:flex-end; align-items:center;">
+            ${surveyBtn}
+            <button class="action-btn" style="padding:5px 12px; font-size:11px" onclick="alert('عرض تفاصيل ${s.name}')">عرض ←</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterStudents(val) {
+  lastStudentSearch = (val || '').trim();
+  applyStudentFilters();
+}
+
+function filterByRisk(risk, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeRiskFilter = risk || 'all';
+  applyStudentFilters();
+}
+
+
+function sendAlert() {
+  alert('سيتم فتح نموذج إرسال التنبيه. يمكن إرسال تنبيهات فردية أو جماعية عبر البريد الإلكتروني أو SMS أو داخل التطبيق.');
+}
+
+// ====== NOTIFICATIONS ======
+function toggleNotif(btn) {
+  const panel = document.getElementById('notif-panel');
+  notifOpen = !notifOpen;
+  panel.classList.toggle('open', notifOpen);
+
+  // Close on outside click
+  if (notifOpen) {
+    setTimeout(() => {
+      document.addEventListener('click', function closeNotif(e) {
+        if (!panel.contains(e.target) && e.target !== btn) {
+          panel.classList.remove('open');
+          notifOpen = false;
+          document.removeEventListener('click', closeNotif);
+        }
+      });
+    }, 50);
+  }
+}
+
+// ====== CHATBOT ======
+function toggleChat() {
+  document.getElementById('chat-panel').classList.toggle('open');
+}
+
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML += `<div class="chat-msg user">${msg}</div>`;
+
+  let reply = chatReplies.default;
+  for (const [key, val] of Object.entries(chatReplies)) {
+    if (key !== 'default' && msg.includes(key)) { reply = val; break; }
+  }
+
+  setTimeout(() => {
+    msgs.innerHTML += `<div class="chat-msg bot">${reply}</div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 500);
+
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('note-modal');
+    if (modal && modal.style.display === 'flex') closeNoteModal();
+  }
+});
+</script>
+</body>
+</html>
